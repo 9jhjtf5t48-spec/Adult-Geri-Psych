@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NURS 5340 — Exam I Practice: Adult &amp; Geriatric PMH</title>
+<style>
+  :root{
+    --ink:#1c2b33;
+    --ink-soft:#4a5b64;
+    --paper:#f6f3ec;
+    --card:#ffffff;
+    --rule:#dcd5c4;
+    --teal:#0f5257;
+    --teal-deep:#0a3a3e;
+    --amber:#b5762a;
+    --amber-soft:#f2e3cd;
+    --correct:#2f6b3f;
+    --correct-bg:#e6f0e6;
+    --wrong:#a13a3a;
+    --wrong-bg:#f6e6e4;
+    --serif: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans);}
+  body{min-height:100vh;padding:28px 16px 60px;}
+  .wrap{max-width:760px;margin:0 auto;}
+
+  .masthead{border-bottom:3px double var(--teal-deep);padding-bottom:16px;margin-bottom:22px;}
+  .masthead .eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:700;}
+  .masthead h1{font-family:var(--serif);font-size:28px;line-height:1.15;margin:6px 0 4px;color:var(--teal-deep);}
+  .masthead p{margin:0;font-size:13.5px;color:var(--ink-soft);}
+
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+  .progress-track{flex:1;height:6px;background:var(--rule);border-radius:99px;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--amber));border-radius:99px;transition:width .3s ease;}
+  .progress-label{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;font-variant-numeric:tabular-nums;}
+
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:26px 26px 22px;box-shadow:0 1px 2px rgba(28,43,51,.04);}
+  .qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .qnum{font-family:var(--serif);font-size:15px;color:var(--amber);font-weight:700;}
+  .qcat{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);background:#e7f0ef;padding:3px 9px;border-radius:99px;font-weight:600;}
+
+  .qtext{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--ink);margin-bottom:20px;}
+
+  .options{display:flex;flex-direction:column;gap:10px;margin-bottom:6px;}
+  .opt{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;border:1.5px solid var(--rule);border-radius:8px;cursor:pointer;background:#fffefb;transition:border-color .15s, background .15s;}
+  .opt:hover{border-color:var(--teal);}
+  .opt.selected{border-color:var(--teal);background:#eaf3f2;}
+  .opt input{margin-top:3px;accent-color:var(--teal);flex-shrink:0;}
+  .opt .letter{font-weight:700;color:var(--teal-deep);font-family:var(--serif);flex-shrink:0;width:18px;}
+  .opt span.txt{font-size:15px;line-height:1.45;color:var(--ink);}
+  .opt.disabled{cursor:default;}
+  .opt.correct-answer{border-color:var(--correct);background:var(--correct-bg);}
+  .opt.wrong-answer{border-color:var(--wrong);background:var(--wrong-bg);}
+  .opt .tag{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:99px;flex-shrink:0;}
+  .opt.correct-answer .tag{background:var(--correct);color:#fff;}
+  .opt.wrong-answer .tag{background:var(--wrong);color:#fff;}
+
+  .rationale{margin-top:16px;padding:16px 18px;border-radius:8px;font-size:14.5px;line-height:1.6;display:none;}
+  .rationale.show{display:block;}
+  .rationale.right{background:var(--correct-bg);border:1px solid #bcd7bd;color:#204a2a;}
+  .rationale.wrongbox{background:var(--wrong-bg);border:1px solid #e3bcbc;color:#5e2020;}
+  .rationale .verdict{font-weight:700;font-family:var(--serif);font-size:15.5px;display:block;margin-bottom:4px;}
+
+  .actions{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:10px;}
+  .btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 20px;border-radius:7px;border:1.5px solid transparent;cursor:pointer;transition:opacity .15s, transform .1s;}
+  .btn:active{transform:scale(.98);}
+  .btn:disabled{opacity:.35;cursor:not-allowed;}
+  .btn-ghost{background:transparent;border-color:var(--rule);color:var(--ink-soft);}
+  .btn-ghost:hover:not(:disabled){border-color:var(--teal);color:var(--teal-deep);}
+  .btn-primary{background:var(--teal);color:#fff;}
+  .btn-primary:hover:not(:disabled){background:var(--teal-deep);}
+  .btn-amber{background:var(--amber);color:#fff;}
+  .btn-amber:hover:not(:disabled){background:#96601f;}
+
+  .nav-right{display:flex;gap:10px;}
+
+  .jumpgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:20px;}
+  .jump{aspect-ratio:1;border-radius:5px;border:1.5px solid var(--rule);background:#fff;font-size:11px;font-weight:600;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .jump.current{border-color:var(--teal-deep);border-width:2px;}
+  .jump.answered-correct{background:var(--correct-bg);border-color:#bcd7bd;color:#204a2a;}
+  .jump.answered-wrong{background:var(--wrong-bg);border-color:#e3bcbc;color:#5e2020;}
+
+  .results{text-align:center;padding:10px 0;}
+  .results .score-big{font-family:var(--serif);font-size:64px;color:var(--teal-deep);margin:14px 0 4px;line-height:1;}
+  .results .score-label{font-size:14px;color:var(--ink-soft);margin-bottom:22px;}
+  .results .pct{font-size:20px;font-weight:700;color:var(--amber);margin-bottom:26px;}
+  .breakdown{text-align:left;margin-top:10px;border-top:1px solid var(--rule);padding-top:18px;}
+  .breakdown h3{font-family:var(--serif);font-size:16px;color:var(--teal-deep);margin:0 0 12px;}
+  .catrow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee6d6;font-size:13.5px;}
+  .catrow:last-child{border-bottom:none;}
+  .catrow .catname{color:var(--ink);}
+  .catrow .catscore{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-weight:600;}
+  .bar-bg{background:var(--rule);border-radius:99px;height:5px;width:100px;overflow:hidden;margin-left:10px;}
+  .bar-fill{height:100%;background:var(--teal);}
+
+  .review-list{margin-top:26px;text-align:left;}
+  .review-item{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin-bottom:10px;background:#fffefb;cursor:pointer;}
+  .review-item:hover{border-color:var(--teal);}
+  .review-item .rtop{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;}
+  .review-item .rtop .rq{font-weight:700;color:var(--ink-soft);}
+  .review-item .rtop .rres{font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .review-item.iscorrect .rres{color:var(--correct);}
+  .review-item.iswrong .rres{color:var(--wrong);}
+  .review-item .rtext{font-size:13.5px;color:var(--ink);line-height:1.4;}
+
+  footer.note{margin-top:34px;text-align:center;font-size:12px;color:#8a8272;line-height:1.6;}
+
+  @media (max-width:480px){
+    .card{padding:20px 18px 18px;}
+    .qtext{font-size:16.5px;}
+    .jumpgrid{grid-template-columns:repeat(8,1fr);}
+    .results .score-big{font-size:52px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="eyebrow">NURS 5340 · PMH Adult &amp; Geriatric</div>
+    <h1>Exam I Practice Set</h1>
+    <p>50 vignette-style questions · Module 1: Theoretical History, Psychiatric Evaluation, Bipolar I/II, Major Depressive Disorder</p>
+  </div>
+
+  <div id="quizArea"></div>
+
+  <footer class="note">Self-study practice built from your syllabus, assigned texts, and course study guide.<br>Not an official assessment — cross-check against your instructor's materials.</footer>
+</div>
+
+<script>
+const QUESTIONS = [
+{cat:"Theory",q:"A 60-year-old retired accountant tells his PMHNP, \"I look back and I'm proud of the life I built, even with its mistakes.\" This reflects successful resolution of Erikson's stage of:",opts:["Generativity vs. Stagnation","Integrity vs. Despair","Identity vs. Role Confusion","Intimacy vs. Isolation"],a:1,r:"Correct: Integrity vs. Despair is Erikson's eighth and final stage (late adulthood), centered on reflecting back on life as meaningful versus regretful. Generativity vs. Stagnation is the midlife stage about contributing productively (raising children, mentoring), not retrospective evaluation. Identity and Intimacy belong to adolescence and young adulthood, respectively — both too early for this patient's life stage and content."},
+{cat:"Theory",q:"A father describes his 4-year-old son as constantly asking 'why' about everything, initiating pretend games, and occasionally seeming to feel excessive guilt after breaking a toy. Per Erikson, this child is navigating:",opts:["Trust vs. Mistrust","Autonomy vs. Shame & Doubt","Initiative vs. Guilt","Industry vs. Inferiority"],a:2,r:"Correct: Initiative vs. Guilt spans roughly ages 3–5 and centers on a child asserting control through play, questions, and social initiative — with guilt emerging if that initiative is met with excessive criticism. Trust vs. Mistrust (birth–18mo) and Autonomy vs. Shame & Doubt (1–3yr) are too early developmentally; Industry vs. Inferiority (5–12yr) centers on competence through school/skills, not play initiative."},
+{cat:"Theory",q:"A PMHNP is evaluating a 7-year-old for a possible learning concern. Per Piaget, at this age the child should be transitioning into which stage, most notably marked by an understanding of conservation?",opts:["Sensorimotor","Preoperational","Concrete Operational","Formal Operational"],a:2,r:"Correct: Concrete Operational (roughly 7–11 years) is defined by logical thinking about real/concrete events, including conservation (recognizing that volume/amount stays constant despite a change in appearance). Sensorimotor (birth–2) and Preoperational (2–7) precede this developmentally; Formal Operational (12+) introduces abstract/hypothetical reasoning, which is beyond what's expected at 7."},
+{cat:"Theory",q:"A 35-year-old male reports chronic difficulty maintaining employment, describes himself as 'messy and disorganized,' and has a history of oppositional behavior toward authority figures since childhood. Per Freud's psychosexual theory, fixation at which stage is most classically associated with this pattern?",opts:["Oral","Anal","Phallic","Latency"],a:1,r:"Correct: Anal-stage fixation (ages 1–3, centered on toilet training and control) is classically linked to adult traits of either excessive orderliness or, at the opposite extreme, messiness and difficulty with authority/control struggles. Oral fixation manifests as dependency-related behaviors (smoking, overeating). Phallic fixation is linked to sexual dysfunction, not organizational/authority conflict. Latency has no described adult fixation."},
+{cat:"Theory",q:"A patient in therapy states, \"I know intellectually my anxiety isn't rational, but I can't stop thinking about worst-case scenarios.\" She then quickly pivots the conversation to a lighter topic each time this theme surfaces. This pattern is best understood as:",opts:["Repression","Resistance/defense against unconscious conflict","Transference","Countertransference"],a:1,r:"Correct: Actively deflecting from an anxiety-provoking topic in session — while remaining consciously aware the topic exists — reflects resistance, the behavioral expression of a defense mechanism working to avoid deeper unconscious conflict. Repression would mean the material is unconsciously blocked from awareness entirely (she wouldn't be able to name the anxiety at all). Transference involves redirecting feelings about a past relationship onto the therapist; countertransference is the clinician's own reaction to the patient — neither fits this patient-focused avoidance pattern."},
+{cat:"Theory",q:"According to Beck's cognitive theory, a depressed patient who states \"I ruined everything, nothing will ever get better, and it's all pointless\" is expressing which components of the cognitive triad?",opts:["Self only","Self and world/environment only","World/environment and future only","Self, world/environment, and future"],a:3,r:"Correct: 'I ruined everything' reflects a negative view of self; 'nothing will ever get better' reflects hopelessness about the future; and the broader framing of pointlessness reflects a negative view of the world/environment — all three domains of Beck's cognitive triad are represented in this single statement."},
+{cat:"Theory",q:"A PMHNP explains to a patient that lower-level needs like safety and food security must be addressed before the patient can meaningfully engage in goals like self-actualization or personal growth work. This reflects which theorist's framework?",opts:["Erik Erikson","Sigmund Freud","Abraham Maslow","B.F. Skinner"],a:2,r:"Correct: Maslow's hierarchy of needs holds that lower-level physiological/safety needs must be met before higher-level needs (belonging, esteem, self-actualization) can be meaningfully pursued — a humanistic-theory concept. Erikson and Freud are developmental/psychodynamic theorists, not associated with a needs hierarchy. Skinner is a behaviorist focused on conditioning, unrelated to this framework."},
+{cat:"Theory",q:"A patient explains her recurrent depressive episodes by pointing to systemic barriers to care, stigma in her community around seeking treatment, and financial inability to access consistent therapy. This explanation is most consistent with which theoretical lens?",opts:["Psychodynamic theory","Sociocultural theory","Behavioral theory","Cognitive theory"],a:1,r:"Correct: Sociocultural theory frames mental illness through the surrounding social/cultural environment — stigma, access to care, and systemic inequality are its defining focus areas. Psychodynamic theory would look at unconscious conflict/early experience; behavioral theory would look at conditioning/reinforcement patterns; cognitive theory would look at distorted thought patterns — none of these match the systemic/access-focused explanation given."},
+{cat:"Theory",q:"A nurse practitioner student reports feeling anxious and less confident as a new psychiatric interviewer, despite having been a highly skilled ICU nurse for 10 years. Using Benner's model, this transition reflects a shift from:",opts:["Competent back to Advanced Beginner","Expert back to Novice","Proficient to Expert","Novice to Advanced Beginner"],a:1,r:"Correct: Benner's model describes many APPN students as entering psychotherapy training already \"expert\" in a prior nursing specialty, then returning to \"novice\" status as they learn the new skill of psychotherapy — a normal but often anxiety-provoking transition. The other options don't reflect this specific expert-to-novice regression pattern described in the reading."},
+{cat:"Theory",q:"A patient describes turning to competitive marathon training as an outlet after a difficult divorce, channeling his anger and grief into a demanding, socially acceptable pursuit. This defense mechanism is best classified as:",opts:["Displacement","Sublimation","Rationalization","Acting out"],a:1,r:"Correct: Sublimation is a mature defense mechanism involving channeling an unacceptable or distressing impulse into a socially productive activity — exactly what's described here. Displacement redirects emotion toward a safer but unrelated target (not a constructive outlet). Rationalization involves justifying behavior with false logic. Acting out expresses conflict through impulsive behavior rather than a structured, productive pursuit."},
+{cat:"Interview/MSE",q:"A PMHNP is completing an initial visit note for a new patient. Which type of note is this, and how does it differ from what will be used at the patient's follow-up visits?",opts:["Progress note; more comprehensive than future visits","Psychiatric evaluation note; more comprehensive than the SOAP-style progress notes used at follow-up","SOAP note; used identically at every visit","Consult note; only used if another provider requests input"],a:1,r:"Correct: The initial visit generates a comprehensive psychiatric evaluation note, covering all components of the full evaluation; this differs from the SOAP-style progress notes used at follow-up visits, which focus on interval history and updates rather than re-documenting the full evaluation each time."},
+{cat:"Interview/MSE",q:"During an initial psychiatric interview, a PMHNP documents, \"The patient denies SI, HI, AVH, and any history or current presentation of SIB or mania.\" This statement is most appropriately placed within which component of the note?",opts:["Chief complaint","History of present illness (HPI)","Mental status exam","Review of systems only"],a:1,r:"Correct: This standardized safety/differential screening line is typically documented within the HPI, where the clinician characterizes the current presentation and rules out major safety concerns and differential considerations (mania, psychosis, self-injury) as part of describing the episode. It's too detailed/clinical for the chief complaint (the patient's own brief reason for the visit) and is broader than a single MSE domain."},
+{cat:"Interview/MSE",q:"A patient's family history reveals a mother with bipolar disorder and a maternal grandmother who was hospitalized for 'nervous breakdowns.' Why is this history component given particular weight during a psychiatric evaluation?",opts:["It determines insurance coverage for treatment","Several major psychiatric conditions, including bipolar disorder, carry a significant genetic/heritability component","Family history only matters for pediatric patients","It is required for legal documentation purposes only"],a:1,r:"Correct: Family psychiatric history carries particular diagnostic weight because heritability is strongest for conditions like ADHD, ASD, mood disorders, bipolar disorder, and substance use disorders — a family history of bipolar disorder specifically raises the pretest likelihood of the same or related diagnosis in this patient. The other options misrepresent the clinical purpose of collecting this history."},
+{cat:"Interview/MSE",q:"On mental status exam, a PMHNP notes a patient's speech is rapid and difficult to interrupt, and observes that the patient is unkempt with disheveled clothing inappropriate for the cold weather outside. Which two MSE domains are being documented, respectively?",opts:["Thought process; Cognition","Speech; Appearance and behavior","Mood; Affect","Thought content; Insight"],a:1,r:"Correct: Rate/character of speech (rapid, pressured) is documented under the Speech domain, while grooming and dress appropriate to the season/setting fall under Appearance and Behavior. Thought process refers to the organization of thinking (tangentiality, flight of ideas), not the physical rate of speech. Mood is the patient's subjective report; affect is the clinician's observed emotional expression — neither matches what's described here."},
+{cat:"Interview/MSE",q:"A patient with a documented substance use disorder involving opioid pain medication and heroin insists, \"It's not really a big deal, I can stop whenever I want.\" How should the PMHNP document this finding on the mental status exam?",opts:["Poor judgment","Poor insight","Flat affect","Disorganized thought process"],a:1,r:"Correct: This reflects poor insight — a lack of understanding or acknowledgment of one's own illness/disease process, which is exactly what's demonstrated by minimizing a documented substance use disorder. Judgment refers to the capacity to make and act on good decisions, which is a related but distinct concept from understanding the illness itself. Nothing here describes affect or thought organization."},
+{cat:"Interview/MSE",q:"A patient presents with new-onset confusion, agitation, and a reported seizure witnessed by family. Beyond psychiatric management, which referral is most appropriate given this specific presentation?",opts:["Sleep medicine","Neurology","Physical therapy","Nutrition"],a:1,r:"Correct: Neurology is the appropriate referral for neurological symptoms such as seizure activity that could be contributing to or mimicking a psychiatric presentation — this needs to be worked up before finalizing a purely psychiatric diagnosis. Sleep medicine would be appropriate for suspected sleep-disordered breathing or another primary sleep disorder, not seizure activity. Physical therapy and nutrition don't address this specific presentation."},
+{cat:"Interview/MSE",q:"Which of the following best describes the SAFE-T model's correct sequence for suicide risk assessment?",opts:["Determine risk level → suicide inquiry → risk factors → protective factors → intervention","Identify risk factors → identify protective factors → conduct suicide inquiry → determine risk level → intervention","Suicide inquiry → intervention → risk factors → protective factors → risk level","Intervention → risk factors → protective factors → suicide inquiry → risk level"],a:1,r:"Correct: SAFE-T proceeds in this order: identify risk factors, identify protective factors, conduct a direct suicide inquiry, determine an overall risk level, then select an intervention based on that risk level. The other sequences are out of order and would mean intervening before adequately assessing risk, which defeats the purpose of a structured risk assessment."},
+{cat:"MDD",q:"A 52-year-old woman reports depressed mood, anhedonia, poor concentration, hypersomnia, and significant guilt for the past 3 weeks, with clear impairment in her ability to work. What is the most appropriate diagnosis?",opts:["Adjustment Disorder with Depressed Mood","Persistent Depressive Disorder","Major Depressive Disorder","Cyclothymic Disorder"],a:2,r:"Correct: This presentation meets full criteria for Major Depressive Disorder — 5 symptoms (depressed mood, anhedonia, concentration difficulty, hypersomnia, guilt) present for well over the required 2-week minimum, with clear functional impairment. Adjustment Disorder requires a specific identifiable stressor, which isn't described here. Persistent Depressive Disorder requires chronic symptoms for 2+ years, not 3 weeks. Cyclothymic Disorder requires alternating hypomanic and depressive symptoms, and no elevated mood period is described."},
+{cat:"MDD",q:"A patient's chief complaint is, \"I've just always been kind of down, for as long as I can remember — maybe 5 or 6 years now. It's not severe, I still work, but I never feel good.\" This is most consistent with:",opts:["Major Depressive Disorder, recurrent","Persistent Depressive Disorder (dysthymia)","Bipolar II Disorder","Adjustment Disorder"],a:1,r:"Correct: Chronic, lower-intensity depressive symptoms present most days for years, with preserved functioning, is the classic presentation of Persistent Depressive Disorder (dysthymia) — patients often describe it exactly this way, as a longstanding baseline rather than a discrete episode. MDD is defined by a 2-week acute episode threshold with more severe symptoms. No hypomanic history is described, ruling out Bipolar II. There's no identifiable recent stressor, ruling out Adjustment Disorder."},
+{cat:"MDD",q:"A woman reports that for the past several months, in the week before her period each month, she experiences marked irritability, mood swings, and anxiety that resolve within a few days of menses onset, then remains asymptomatic the rest of the cycle. This pattern is most consistent with:",opts:["Major Depressive Disorder with seasonal pattern","Premenstrual Dysphoric Disorder (PMDD)","Cyclothymic Disorder","Bipolar II Disorder"],a:1,r:"Correct: Mood symptoms tied specifically to the luteal phase of the menstrual cycle, resolving with menses, define Premenstrual Dysphoric Disorder. Seasonal pattern MDD is tied to time of year, not the menstrual cycle. Cyclothymic Disorder requires a 2-year course of subsyndromal hypomanic/depressive symptoms unrelated to a monthly hormonal cycle. Bipolar II would require an actual hypomanic episode, not just irritability tied to menstruation."},
+{cat:"MDD",q:"A grieving 70-year-old man, three weeks after his wife's death, reports sadness, poor sleep, and reduced appetite, but continues attending his weekly community group and denies any thoughts of worthlessness or wanting to die. What is the most appropriate next step?",opts:["Diagnose MDD and initiate an SSRI immediately","Provide supportive care and continue monitoring; this may represent normal grief rather than a major depressive episode","Prescribe a benzodiazepine for sleep","Refer for ECT given his age and recent loss"],a:1,r:"Correct: Grief can closely resemble depression, and the DSM-5-TR requires clinical judgment to distinguish proportional, functioning-preserved grief from a true major depressive episode. Here, functioning is preserved (still attending his group), and there's no anhedonia, worthlessness, or suicidality — supportive monitoring is appropriate rather than immediately pathologizing this as MDD. Benzodiazepines carry heightened risk in older adults; ECT is reserved for severe/refractory presentations, not routine grief."},
+{cat:"MDD",q:"A patient with a history of dysthymia for the past 4 years now presents with a superimposed 3-week period of markedly worsened mood, anhedonia, and passive suicidal ideation. This clinical picture is best described as:",opts:["Cyclothymic Disorder","Double depression","Adjustment Disorder","Bipolar I Disorder"],a:1,r:"Correct: 'Double depression' describes a major depressive episode superimposed on a chronic baseline of persistent depressive disorder (dysthymia) — exactly what's described here. Cyclothymic Disorder involves subsyndromal hypomanic and depressive symptoms, not a full depressive episode on a dysthymic baseline. Adjustment Disorder requires an identifiable stressor, not described here. Bipolar I requires a manic episode, which isn't present."},
+{cat:"MDD",q:"Which of the following medical conditions should routinely be ruled out before finalizing a primary diagnosis of Major Depressive Disorder?",opts:["Appendicitis and cholecystitis","Hypothyroidism and anemia","Osteoarthritis and gout","Otitis media and sinusitis"],a:1,r:"Correct: Hypothyroidism and anemia are well-established medical mimics/contributors to depressive symptoms and should be screened for before finalizing a primary psychiatric diagnosis of MDD. The other listed conditions are not standard depression-mimicking medical rule-outs."},
+{cat:"Bipolar",q:"A 28-year-old man reports 8 days of decreased need for sleep, grandiosity, and rapid speech. During this period he was fired from his job for erratic behavior and depleted his savings account on an impulsive business venture. This presentation meets criteria for:",opts:["Hypomanic episode","Manic episode","Cyclothymic Disorder","Mixed anxiety-depressive episode"],a:1,r:"Correct: This meets full manic episode criteria — duration exceeds the 1-week minimum, and marked functional impairment is clearly present (job loss, financial devastation from impulsive decisions). Hypomania is ruled out specifically because of this level of impairment; hypomania by definition does not cause marked impairment. Cyclothymic Disorder requires a 2-year subsyndromal course, not one acute episode."},
+{cat:"Bipolar",q:"A 41-year-old woman reports a 5-day period of unusually elevated mood, increased energy, and reduced sleep need that her coworkers noticed as out of character, but she continued working productively and denies any hospitalization or psychotic symptoms. Which diagnosis requires this type of episode?",opts:["Bipolar I Disorder","Bipolar II Disorder","Schizoaffective Disorder","Brief Psychotic Disorder"],a:1,r:"Correct: This describes a hypomanic episode (≥4 days, unequivocal change noticeable to others, no marked impairment, no hospitalization, no psychosis) — the defining episode type required for Bipolar II Disorder (alongside a major depressive episode). Bipolar I requires a full manic episode, which this does not meet. Schizoaffective and Brief Psychotic Disorder both require psychotic symptoms, which are absent here."},
+{cat:"Bipolar",q:"A patient has experienced numerous periods of mild hypomanic-like and depressive-like symptoms over the past 3 years, none of which have ever met full criteria for a hypomanic or major depressive episode, without any symptom-free period longer than 2 months. This is most consistent with:",opts:["Bipolar II Disorder","Cyclothymic Disorder","Persistent Depressive Disorder","Bipolar I Disorder"],a:1,r:"Correct: Cyclothymic Disorder is defined by numerous periods of subsyndromal hypomanic and depressive symptoms over at least 2 years, that never meet full episode criteria, without a symptom-free gap longer than 2 months — precisely this presentation. Bipolar I and II both require at least one full episode meeting complete criteria, which explicitly hasn't happened here. Persistent Depressive Disorder is purely depressive, without the hypomanic-like periods described."},
+{cat:"Bipolar",q:"A patient with no personal or family psychiatric history develops a full manic episode two weeks after starting sertraline for a first depressive episode, and the mania persists well beyond the expected pharmacologic window of the medication. How should this episode be classified?",opts:["Substance/Medication-Induced Mood Disorder only, not a true manic episode","A manic episode, warranting a Bipolar I Disorder diagnosis","Normal antidepressant side effect requiring no diagnostic change","Adjustment Disorder with mixed features"],a:1,r:"Correct: Per DSM-5-TR, a full manic episode that emerges during antidepressant treatment and persists beyond the medication's physiological effect counts as a genuine manic episode — and a single such episode is sufficient to establish a Bipolar I Disorder diagnosis, even though it was pharmacologically triggered. This is an important nuance distinguishing a transient medication side effect from an unmasked, diagnosable bipolar course."},
+{cat:"Bipolar",q:"Which feature below is most useful for distinguishing bipolar depression from unipolar (major) depression, per the differentiating features referenced in this course's assigned reading?",opts:["Presence of sad mood","Later age of onset in bipolar depression (40s–50s) versus unipolar (teens–20s)","Hypersomnia and psychomotor retardation more common in bipolar depression versus insomnia/agitation in unipolar","Equal likelihood of antidepressant response in both types"],a:2,r:"Correct: Bipolar depression tends to feature hypersomnia over insomnia and psychomotor retardation over agitation, in contrast to unipolar depression, which more often features insomnia and agitation. The other listed features are reversed from the actual pattern: bipolar depression typically has an *earlier* age of onset (teens/20s/30s) than unipolar (30s/40s/50s), and bipolar depression carries a real risk of antidepressant-induced mania/hypomania, unlike unipolar depression."},
+{cat:"Bipolar",q:"A 33-year-old woman has experienced 5 distinct mood episodes in the past 12 months, each separated by at least 2 months of full remission. This course specifier is known as:",opts:["Mixed features","Rapid cycling","Seasonal pattern","Peripartum onset"],a:1,r:"Correct: Rapid cycling is defined as ≥4 mood episodes within one year, with intervening periods of partial or full remission (or a direct switch to an episode of the opposite polarity) — this patient's 5 episodes with clear remission periods fits that definition. Mixed features describes symptoms of the opposite pole occurring within a single episode, not a course pattern across multiple episodes. Seasonal pattern and peripartum onset refer to different specific timing triggers, not episode frequency."},
+{cat:"Bipolar",q:"A pregnant patient with Bipolar I Disorder, previously stable on valproate, presents for preconception counseling. What is the primary concern with continuing valproate during pregnancy?",opts:["Risk of Ebstein's anomaly","Risk of neural tube defects","Risk of maternal hypothyroidism","Risk of maternal agranulocytosis requiring transfusion"],a:1,r:"Correct: Valproate carries a well-established teratogenic risk of neural tube defects and should generally be avoided in pregnancy or in patients planning pregnancy. Ebstein's anomaly is specifically the lithium-associated cardiac malformation risk, not valproate's. Hypothyroidism is a lithium-monitoring concern. While valproate does require CBC monitoring for blood dyscrasias, agranulocytosis requiring transfusion is not the primary pregnancy-specific concern being tested here."},
+{cat:"Bipolar",q:"A patient stabilized on an established mood stabilizer develops breakthrough depressive symptoms. The PMHNP considers adding an SSRI. What is the most important consideration before doing so?",opts:["SSRIs are contraindicated in all bipolar patients under any circumstance","The SSRI should be added cautiously, with close monitoring for a manic or hypomanic switch, since the existing mood stabilizer provides some protective coverage","The mood stabilizer should be discontinued first to avoid drug interactions","SSRIs should always be started before any mood stabilizer in bipolar depression"],a:1,r:"Correct: When a patient is already adequately dosed on a mood stabilizer, cautious SSRI augmentation with close monitoring for activation/switching is the evidence-based approach — the existing mood stabilizer coverage is what makes augmentation acceptable, distinct from antidepressant monotherapy (which is not appropriate in bipolar disorder and carries a real risk of inducing mania/hypomania)."},
+{cat:"Adjustment/Other",q:"A 40-year-old man reports low mood and difficulty concentrating that began about 6 weeks after being passed over for an expected promotion. He denies suicidal ideation, continues to perform his job duties adequately, and his symptoms are mild but persistent. What is the most appropriate diagnosis?",opts:["Major Depressive Disorder","Adjustment Disorder with Depressed Mood","Persistent Depressive Disorder","Bipolar II Disorder, depressed phase"],a:1,r:"Correct: A clear identifiable stressor (being passed over for promotion), onset within 3 months of that stressor, and symptoms that are distressing but don't meet MDD's severity/impairment threshold (preserved job performance, no SI) is the classic profile of Adjustment Disorder with Depressed Mood. MDD requires more severe symptoms/impairment; PDD requires 2+ years of chronicity; nothing suggests a hypomanic history for Bipolar II."},
+{cat:"Adjustment/Other",q:"Which of the following is a defining timing criterion for Adjustment Disorder?",opts:["Symptoms must persist for at least 2 years","Symptom onset must occur within 3 months of an identifiable stressor, with typical resolution within 6 months of the stressor's resolution","Symptoms must be present for at least 2 weeks with no identifiable trigger","Symptoms must have an onset before age 12"],a:1,r:"Correct: Adjustment Disorder requires symptom onset within 3 months of an identifiable stressor, with symptoms typically resolving within 6 months once the stressor or its consequences have ended. The other options describe timing criteria for different conditions (Persistent Depressive Disorder's 2-year requirement, MDD's 2-week episode threshold, or a pediatric NDD-style onset criterion) — none of which apply to Adjustment Disorder."},
+{cat:"Adjustment/Other",q:"A patient's presentation includes low mood, anergia, and hopelessness, and the PMHNP is weighing both biological and environmental contributors in the case formulation. Which treatment approach best reflects a true biopsychosocial framework?",opts:["Antidepressant monotherapy, since biology is the primary driver of depression","A combination of medication, psychotherapy, and family/social education addressing biological, psychological, and social domains","Genetic testing prior to any treatment decision","Lifestyle modification only, since environmental factors were identified"],a:1,r:"Correct: The biopsychosocial model holds that no single domain — biological, psychological, or social — fully explains a presentation or should carry treatment alone. Medication addresses the biological domain, psychotherapy addresses the psychological domain, and family/social education addresses the social domain — together reflecting a genuinely integrated approach. The other options each collapse treatment into a single domain, which is exactly what this model argues against."},
+{cat:"Pharm",q:"A PMHNP is starting a patient on lithium for Bipolar I Disorder. Which two organ systems require baseline and ongoing monitoring specifically because of lithium's known effects?",opts:["Hepatic and cardiac","Renal and thyroid","Pulmonary and hematologic","Pancreatic and ocular"],a:1,r:"Correct: Lithium is renally excreted, making renal function monitoring essential, and it carries a well-documented risk of inducing hypothyroidism, making thyroid function monitoring equally essential. Hepatic monitoring is more relevant to valproate; the other organ systems listed aren't lithium's primary monitoring concerns."},
+{cat:"Pharm",q:"Which laboratory monitoring parameters are most specifically associated with valproate (Depakote) therapy?",opts:["TSH and free T4","Liver function tests and complete blood count","Serum creatinine and eGFR","Fasting lipid panel only"],a:1,r:"Correct: Valproate carries risks of hepatotoxicity and blood dyscrasias, making LFTs and CBC the specific monitoring parameters associated with this medication. TSH/T4 monitoring is a lithium concern; creatinine/eGFR is also more specifically a lithium (renal) concern. A lipid panel alone doesn't capture valproate's primary monitoring needs."},
+{cat:"Pharm",q:"Before initiating any of the following — lithium, valproate, or an atypical antipsychotic — which baseline lab/measurement should be obtained regardless of which specific medication is chosen?",opts:["Serum lithium level","Weight, fasting glucose, and lipid panel (metabolic baseline)","Liver function tests only","Thyroid stimulating hormone only"],a:1,r:"Correct: A metabolic baseline — weight, fasting glucose, and lipid panel — should be obtained before starting any of these three medication classes, since atypical antipsychotics carry the most direct metabolic risk, but lithium and valproate can also affect weight. The other options are medication-specific (a lithium level obviously can't be drawn before lithium is started; LFTs are valproate-specific; TSH is lithium-specific) rather than applying across all three classes."},
+{cat:"Pharm",q:"A patient newly started on sertraline for MDD calls the office reporting agitation, sweating, tremor, and diarrhea after also starting an over-the-counter St. John's Wort supplement. This presentation is most concerning for:",opts:["Neuroleptic malignant syndrome","Serotonin syndrome","Lithium toxicity","Extrapyramidal symptoms"],a:1,r:"Correct: The combination of a serotonergic prescription medication (sertraline) with another serotonergic agent (St. John's Wort) producing agitation, autonomic instability (sweating), tremor, and GI symptoms is the classic presentation of serotonin syndrome. Neuroleptic malignant syndrome is associated with antipsychotics, not SSRIs. Lithium toxicity would require lithium exposure, not described here. EPS is a dopamine-blockade-related antipsychotic side effect, not an SSRI-related presentation."},
+{cat:"Pharm",q:"Which of the following medication pairs is correctly matched by generic and brand name?",opts:["Duloxetine — Lithobid","Quetiapine — Seroquel","Lamotrigine — Zoloft","Venlafaxine — Depakote"],a:1,r:"Correct: Quetiapine's brand name is Seroquel. Duloxetine's brand name is Cymbalta (Lithobid is a lithium brand name); Lamotrigine's brand name is Lamictal (Zoloft is sertraline's brand name); Venlafaxine's brand name is Effexor (Depakote is valproate's brand name)."},
+{cat:"Pharm",q:"A PMHNP is educating a patient and family about starting an atypical antipsychotic as an adjunct for treatment-resistant depression. Which teaching point is most important to include?",opts:["No monitoring is needed since the dose is low","Risk of weight gain, elevated cholesterol, and elevated blood glucose, warranting ongoing metabolic monitoring","This class of medication carries no long-term risks","Atypical antipsychotics cannot be combined with any antidepressant"],a:1,r:"Correct: Atypical antipsychotics carry a well-established metabolic risk profile — weight gain, dyslipidemia, and hyperglycemia — making this the essential patient/family education point regardless of the dose or indication (including augmentation use in depression). The other options are inaccurate; these medications do require ongoing monitoring, do carry meaningful risks, and augmentation with antidepressants is an established, appropriate use."},
+{cat:"Psychotherapy",q:"A PMHNP working with a chronically depressed patient focuses primarily on strengthening the patient's existing coping strategies and providing reassurance, without deeply exploring unconscious conflict or restructuring cognitive distortions. This reflects which psychotherapy modality?",opts:["Cognitive Behavioral Therapy","Psychodynamic psychotherapy","Supportive psychotherapy","Interpersonal psychotherapy"],a:2,r:"Correct: Supportive psychotherapy — the modality most commonly used by PMHNPs — aims to strengthen ego functioning and adaptive coping through reassurance and support, explicitly not through deep unconscious exploration (psychodynamic) or cognitive restructuring (CBT). Interpersonal psychotherapy instead focuses on current relationships and role transitions, which also doesn't match this description."},
+{cat:"Psychotherapy",q:"A patient in therapy states, \"I'm a complete failure, and nothing I do will ever change that.\" Which therapeutic technique most directly targets this specific distorted thought?",opts:["Behavioral activation","Cognitive restructuring","Psychodynamic interpretation","Family systems mapping"],a:1,r:"Correct: This statement is a textbook example of a cognitive distortion reflecting Beck's cognitive triad (negative self-view, hopeless future view). Cognitive restructuring — identifying the distortion, examining evidence for/against it, and building a more balanced thought — is the CBT technique specifically designed to target statements like this. Behavioral activation addresses low engagement/motivation rather than the distorted thought itself; psychodynamic interpretation and family systems mapping approach the presentation through entirely different theoretical lenses."},
+{cat:"Psychotherapy",q:"Interpersonal Psychotherapy (IPT) for depression is distinguished from other modalities primarily by its focus on:",opts:["Restructuring distorted automatic thoughts","Exploring unconscious childhood conflict","Current relationships and role transitions (grief, role disputes, role transitions, interpersonal deficits)","Applying operant conditioning principles to reduce maladaptive behavior"],a:2,r:"Correct: IPT's defining focus is on current relationships and role transitions — grief, role disputes, role transitions, and interpersonal deficits — as the drivers of mood symptoms. Restructuring automatic thoughts describes CBT; exploring unconscious childhood conflict describes psychodynamic therapy; applying conditioning principles describes behavioral therapy — none of these are IPT's defining focus."},
+{cat:"PMHNP Role",q:"A PMHNP recognizes feeling unusually irritated during sessions with a patient who reminds her of a difficult family member, and deliberately reflects on this reaction rather than letting it influence her clinical judgment unexamined. This reflects:",opts:["Transference","Countertransference awareness as part of self-reflective practice","Poor professional boundaries","Diagnostic overshadowing"],a:1,r:"Correct: Recognizing and reflecting on one's own emotional reactions to a patient (countertransference) is a core component of self-reflective practice, one of the pillars of PMHNP role integration. Transference describes the patient's redirected feelings toward the clinician, not the clinician's own reaction. This example actually reflects good boundaries (self-aware reflection) rather than poor ones, and it isn't related to diagnostic overshadowing (misattributing symptoms to a known condition)."},
+{cat:"PMHNP Role",q:"Which of the following best reflects ethical prescribing practice as emphasized in PMHNP role integration?",opts:["Prescribing based on convenience and habitual patterns regardless of guideline updates","Reviewing whether each medication remains indicated, avoiding unnecessary polypharmacy, and ensuring informed consent","Avoiding all controlled substances under any circumstance","Prescribing solely based on patient request, regardless of clinical indication"],a:1,r:"Correct: Ethical prescribing includes evidence-based prescribing tied to the patient's specific presentation, regularly reviewing whether each medication is still indicated, avoiding unnecessary polypharmacy, and respecting informed consent. The other options represent either an extreme (blanket avoidance of controlled substances, which isn't appropriate when clinically indicated) or an abdication of clinical judgment (prescribing based on habit or patient request alone)."},
+{cat:"PMHNP Role",q:"A PMHNP coordinates care for a patient by communicating with the patient's primary care provider about a possible thyroid contributor to mood symptoms, and refers the patient to a therapist for concurrent psychotherapy. This reflects which pillar of PMHNP role integration?",opts:["Ethical prescribing","Interprofessional collaboration","Self-reflective practice","Recovery-oriented care exclusively"],a:1,r:"Correct: Coordinating with other providers (PCP, therapist) to ensure continuity of care and address contributors outside the PMHNP's own scope is the definition of interprofessional collaboration, one of the three pillars of PMHNP role integration alongside ethical prescribing and self-reflective practice."},
+{cat:"Interview/MSE",q:"On mental status exam, a patient's speech moves rapidly from topic to topic, with each new topic loosely connected to the previous one by an associative link that's difficult to follow, though individual sentences remain grammatically intact. This is best described as:",opts:["Circumstantiality","Tangentiality","Flight of ideas","Thought blocking"],a:2,r:"Correct: Flight of ideas describes a rapid succession of associated ideas, often accompanied by pressured speech, classically seen in mania — matching this description of rapid topic-jumping with loose associative connections. Circumstantiality involves excessive unnecessary detail before eventually returning to the point (not rapid topic-jumping). Tangentiality means replies never actually answer the question asked. Thought blocking is a sudden interruption in the flow of thought, not a rapid connected stream."},
+{cat:"MDD",q:"A patient reports depressive episodes that consistently occur each winter and remit each spring for the past several years, with noticeable improvement when using a light therapy box. This pattern is best classified as MDD with which specifier?",opts:["Melancholic features","Atypical features","Seasonal pattern","Peripartum onset"],a:2,r:"Correct: A recurrent winter-pattern depression that remits in spring, present for 2+ years, defines the seasonal pattern specifier — and response to light therapy is a classic supporting clinical feature. Melancholic features describes severe, biologically-driven depression with pronounced anhedonia; atypical features describes mood reactivity and increased appetite/sleep; peripartum onset is tied to pregnancy/postpartum timing, not season."},
+{cat:"Bipolar",q:"A 24-year-old patient reports a 6-day episode of elevated mood, grandiosity, and decreased sleep need, during which she was involuntarily hospitalized after police found her disoriented and behaving erratically in public. Despite the shorter-than-typical duration, why does this still qualify as a manic (not hypomanic) episode?",opts:["Because 6 days exceeds the minimum duration for hypomania","Because the episode required hospitalization, which waives the standard 1-week duration requirement for mania","Because psychotic features must have been present","Because family confirmed the behavior was out of character"],a:1,r:"Correct: The manic episode duration requirement (≥1 week) is explicitly waived if hospitalization is necessary — this patient's involuntary hospitalization alone is sufficient to classify this as a manic episode regardless of the shorter 6-day duration. While 6 days does exceed hypomania's 4-day minimum, that fact alone doesn't determine mania versus hypomania — severity/hospitalization is the deciding factor, not duration alone. Psychotic features weren't described, and family confirmation of a change is relevant to hypomania as well, so it doesn't distinguish the two."},
+{cat:"Pharm",q:"Which medication is considered particularly effective for the depressive pole and maintenance phase of Bipolar Disorder, but is less effective for treating acute mania?",opts:["Lithium","Valproate","Lamotrigine","Quetiapine"],a:2,r:"Correct: Lamotrigine is specifically noted for its effectiveness in bipolar depression and maintenance treatment, but it has limited efficacy for acute mania compared to lithium, valproate, or atypical antipsychotics, which are better suited for acute manic episodes."},
+];
+</script>
+<script>
+const state = {
+  current: 0,
+  selections: new Array(QUESTIONS.length).fill(null),
+  submitted: new Array(QUESTIONS.length).fill(false),
+  finished: false
+};
+
+const quizArea = document.getElementById('quizArea');
+const letters = ['A','B','C','D'];
+
+function render(){
+  if(state.finished){ renderResults(); return; }
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const i = state.current;
+  const q = QUESTIONS[i];
+  const sel = state.selections[i];
+  const isSubmitted = state.submitted[i];
+  const answeredCount = state.submitted.filter(Boolean).length;
+
+  let optsHtml = q.opts.map((opt, idx) => {
+    let cls = 'opt';
+    let tag = '';
+    if(sel === idx) cls += ' selected';
+    if(isSubmitted){
+      cls += ' disabled';
+      if(idx === q.a){ cls += ' correct-answer'; tag = '<span class="tag">Correct</span>'; }
+      else if(idx === sel){ cls += ' wrong-answer'; tag = '<span class="tag">Your answer</span>'; }
+    }
+    return `<label class="${cls}" data-idx="${idx}">
+      <input type="radio" name="opt" ${sel===idx?'checked':''} ${isSubmitted?'disabled':''}>
+      <span class="letter">${letters[idx]}.</span>
+      <span class="txt">${opt}</span>
+      ${tag}
+    </label>`;
+  }).join('');
+
+  let rationaleHtml = '';
+  if(isSubmitted){
+    const wasRight = sel === q.a;
+    rationaleHtml = `<div class="rationale show ${wasRight?'right':'wrongbox'}">
+      <span class="verdict">${wasRight? 'Correct.' : 'Not quite.'}</span>
+      ${q.r}
+    </div>`;
+  }
+
+  const pct = Math.round(((i)/QUESTIONS.length)*100);
+
+  quizArea.innerHTML = `
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" style="width:${((i+1)/QUESTIONS.length)*100}%"></div></div>
+      <div class="progress-label">Question ${i+1} / ${QUESTIONS.length} &nbsp;·&nbsp; ${answeredCount} answered</div>
+    </div>
+    <div class="card">
+      <div class="qmeta">
+        <div class="qnum">Question ${i+1}</div>
+        <div class="qcat">${q.cat}</div>
+      </div>
+      <div class="qtext">${q.q}</div>
+      <div class="options" id="optionsList">${optsHtml}</div>
+      ${rationaleHtml}
+      <div class="actions">
+        <button class="btn btn-ghost" id="backBtn" ${i===0?'disabled':''}>&larr; Back</button>
+        <div class="nav-right">
+          ${!isSubmitted ? `<button class="btn btn-primary" id="submitBtn" disabled>Submit Answer</button>` : ''}
+          ${isSubmitted && i < QUESTIONS.length-1 ? `<button class="btn btn-primary" id="nextBtn">Next &rarr;</button>` : ''}
+          ${isSubmitted && i === QUESTIONS.length-1 ? `<button class="btn btn-amber" id="finishBtn">See Final Score</button>` : ''}
+        </div>
+      </div>
+      <div class="jumpgrid" id="jumpgrid"></div>
+    </div>
+  `;
+
+  // wire option clicks
+  if(!isSubmitted){
+    document.querySelectorAll('.opt').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.getAttribute('data-idx'));
+        state.selections[i] = idx;
+        renderQuestion();
+      });
+    });
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  if(submitBtn){
+    submitBtn.disabled = sel === null;
+    submitBtn.addEventListener('click', () => {
+      state.submitted[i] = true;
+      renderQuestion();
+    });
+  }
+
+  const backBtn = document.getElementById('backBtn');
+  if(backBtn) backBtn.addEventListener('click', () => { state.current = Math.max(0, i-1); renderQuestion(); });
+
+  const nextBtn = document.getElementById('nextBtn');
+  if(nextBtn) nextBtn.addEventListener('click', () => { state.current = Math.min(QUESTIONS.length-1, i+1); renderQuestion(); });
+
+  const finishBtn = document.getElementById('finishBtn');
+  if(finishBtn) finishBtn.addEventListener('click', () => { state.finished = true; render(); });
+
+  renderJumpGrid();
+}
+
+function renderJumpGrid(){
+  const grid = document.getElementById('jumpgrid');
+  if(!grid) return;
+  let html = '';
+  for(let idx=0; idx<QUESTIONS.length; idx++){
+    let cls = 'jump';
+    if(idx === state.current) cls += ' current';
+    if(state.submitted[idx]){
+      cls += (state.selections[idx] === QUESTIONS[idx].a) ? ' answered-correct' : ' answered-wrong';
+    }
+    html += `<div class="${cls}" data-jump="${idx}">${idx+1}</div>`;
+  }
+  grid.innerHTML = html;
+  grid.querySelectorAll('.jump').forEach(el => {
+    el.addEventListener('click', () => {
+      state.current = parseInt(el.getAttribute('data-jump'));
+      renderQuestion();
+    });
+  });
+}
+
+function renderResults(){
+  const total = QUESTIONS.length;
+  let correct = 0;
+  const catStats = {};
+  QUESTIONS.forEach((q, idx) => {
+    const cat = q.cat;
+    if(!catStats[cat]) catStats[cat] = {correct:0, total:0};
+    catStats[cat].total++;
+    if(state.selections[idx] === q.a){
+      correct++;
+      catStats[cat].correct++;
+    }
+  });
+  const pct = Math.round((correct/total)*100);
+
+  let breakdownHtml = Object.keys(catStats).map(cat => {
+    const s = catStats[cat];
+    const p = Math.round((s.correct/s.total)*100);
+    return `<div class="catrow">
+      <span class="catname">${cat}</span>
+      <span style="display:flex;align-items:center;">
+        <span class="catscore">${s.correct}/${s.total}</span>
+        <span class="bar-bg"><span class="bar-fill" style="width:${p}%"></span></span>
+      </span>
+    </div>`;
+  }).join('');
+
+  let reviewHtml = QUESTIONS.map((q, idx) => {
+    const wasRight = state.selections[idx] === q.a;
+    return `<div class="review-item ${wasRight?'iscorrect':'iswrong'}" data-jump="${idx}">
+      <div class="rtop"><span class="rq">Q${idx+1} · ${q.cat}</span><span class="rres">${wasRight?'Correct':'Missed'}</span></div>
+      <div class="rtext">${q.q.length > 110 ? q.q.slice(0,110)+'…' : q.q}</div>
+    </div>`;
+  }).join('');
+
+  quizArea.innerHTML = `
+    <div class="card results">
+      <div class="qcat" style="display:inline-block;">Final Score</div>
+      <div class="score-big">${correct} / ${total}</div>
+      <div class="score-label">questions answered correctly</div>
+      <div class="pct">${pct}%</div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-ghost" id="reviewBackBtn">&larr; Review All Questions</button>
+        <button class="btn btn-primary" id="restartBtn">Restart Exam</button>
+      </div>
+      <div class="breakdown">
+        <h3>Performance by Topic</h3>
+        ${breakdownHtml}
+      </div>
+      <div class="breakdown review-list">
+        <h3>Question Review — click any to revisit</h3>
+        ${reviewHtml}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    state.current = 0;
+    state.selections = new Array(QUESTIONS.length).fill(null);
+    state.submitted = new Array(QUESTIONS.length).fill(false);
+    state.finished = false;
+    render();
+  });
+  document.getElementById('reviewBackBtn').addEventListener('click', () => {
+    state.finished = false;
+    state.current = 0;
+    render();
+  });
+  quizArea.querySelectorAll('.review-item').forEach(el => {
+    el.addEventListener('click', () => {
+      state.finished = false;
+      state.current = parseInt(el.getAttribute('data-jump'));
+      render();
+    });
+  });
+}
+
+render();
+</script>
+</body>
+</html>
