@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NURS 5340 Exam 3 — Practice Exams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1B2A4A;
+    --ink-soft: #3B4A68;
+    --paper: #F6F4EE;
+    --paper-raised: #FFFFFF;
+    --line: #DCD7C9;
+    --accent: #4F7A6F;
+    --accent-soft: #E4EDE9;
+    --wrong: #B24C3B;
+    --wrong-soft: #F6E6E2;
+    --gold: #B8892F;
+    --gold-soft: #F3E9D3;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #EDEAE0;
+      --ink-soft: #B9C2D6;
+      --paper: #14181F;
+      --paper-raised: #1C2129;
+      --line: #303744;
+      --accent: #7FB3A3;
+      --accent-soft: #1E3530;
+      --wrong: #E08A78;
+      --wrong-soft: #3A2420;
+      --gold: #D9B15E;
+      --gold-soft: #3A3020;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #EDEAE0;
+    --ink-soft: #B9C2D6;
+    --paper: #14181F;
+    --paper-raised: #1C2129;
+    --line: #303744;
+    --accent: #7FB3A3;
+    --accent-soft: #1E3530;
+    --wrong: #E08A78;
+    --wrong-soft: #3A2420;
+    --gold: #D9B15E;
+    --gold-soft: #3A3020;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+  .wrap {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 28px 20px 120px;
+  }
+  header.top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: env(safe-area-inset-top, 0px);
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 16px;
+  }
+  .brand {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .brand small {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: var(--sans);
+  }
+
+  /* -------- Picker screen -------- */
+  #picker { display: none; }
+  #picker.active { display: block; }
+  .picker-intro {
+    font-family: var(--serif);
+    font-size: 1.65rem;
+    line-height: 1.3;
+    margin: 6px 0 8px;
+  }
+  .picker-sub {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-bottom: 28px;
+    max-width: 56ch;
+  }
+  .exam-list { display: flex; flex-direction: column; gap: 12px; }
+  .exam-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    font-family: var(--sans);
+    transition: border-color .15s ease, transform .1s ease;
+  }
+  .exam-card:hover { border-left-color: var(--gold); }
+  .exam-card:active { transform: scale(0.995); }
+  .exam-card .et {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  .exam-card .es {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+  .exam-card .badge {
+    font-size: 0.78rem;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    padding: 4px 11px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .exam-card .badge.done { color: var(--gold); border-color: var(--gold); }
+
+  /* -------- Quiz screen -------- */
+  #quiz { display: none; }
+  #quiz.active { display: block; }
+  .quiz-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+  }
+  .back-link {
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    padding: 4px 0;
+  }
+  .qcount { color: var(--ink-soft); }
+  .progress-track {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 10px 0 26px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width .25s ease;
+  }
+  .stem {
+    font-family: var(--serif);
+    font-size: 1.18rem;
+    line-height: 1.55;
+    margin-bottom: 22px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 13px 15px;
+    cursor: pointer;
+    font-size: 0.96rem;
+    line-height: 1.45;
+    text-align: left;
+  }
+  .opt:hover:not(.locked) { border-color: var(--ink-soft); }
+  .opt .letter {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-top: 1px;
+  }
+  .opt.selected { border-color: var(--ink); }
+  .opt.selected .letter { border-color: var(--ink); color: var(--ink); }
+  .opt.correct { border-color: var(--accent); background: var(--accent-soft); }
+  .opt.correct .letter { border-color: var(--accent); background: var(--accent); color: #fff; }
+  .opt.incorrect { border-color: var(--wrong); background: var(--wrong-soft); }
+  .opt.incorrect .letter { border-color: var(--wrong); background: var(--wrong); color: #fff; }
+  .opt.locked { cursor: default; }
+
+  .submit-row { margin-bottom: 22px; }
+  .btn {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: none;
+    padding: 12px 22px;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+
+  .rationale {
+    border-left: 3px solid var(--gold);
+    background: var(--gold-soft);
+    padding: 14px 18px;
+    border-radius: 3px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .rationale .verdict {
+    font-weight: 700;
+    font-family: var(--serif);
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .verdict.right { color: var(--accent); }
+  .verdict.wrong { color: var(--wrong); }
+
+  /* -------- Bottom nav -------- */
+  .navbar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: var(--paper-raised);
+    border-top: 1px solid var(--line);
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+    display: none;
+  }
+  .navbar.active { display: block; }
+  .navbar-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .nav-btn {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.88rem;
+    border-radius: 5px;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .nav-score { font-size: 0.82rem; color: var(--ink-soft); text-align: center; flex: 1; }
+
+  /* -------- Results screen -------- */
+  #results { display: none; }
+  #results.active { display: block; }
+  .results-hero {
+    text-align: center;
+    padding: 30px 20px 34px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--paper-raised);
+    margin-bottom: 26px;
+  }
+  .results-hero .score-big {
+    font-family: var(--serif);
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .results-hero .score-pct { font-size: 1.1rem; color: var(--ink-soft); margin-top: 8px; }
+  .results-hero .score-label { font-size: 0.85rem; color: var(--ink-soft); margin-top: 18px; letter-spacing: 0.02em; }
+  .review-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+  .review-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper-raised);
+    cursor: pointer;
+    font-size: 0.87rem;
+    text-align: left;
+    width: 100%;
+    font-family: var(--sans);
+    color: var(--ink);
+  }
+  .review-row .mark {
+    flex: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; color: #fff;
+  }
+  .mark.right { background: var(--accent); }
+  .mark.wrong { background: var(--wrong); }
+  .review-row .rq { flex: 1; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  a.download-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    text-decoration: underline;
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">NURS 5340 — Exam 3<small>Ch. 4 Deep Dive · vignette-style · 36 questions</small></div>
+    <button class="theme-toggle" id="themeToggle" type="button">Dark mode</button>
+  </header>
+
+  <section id="picker" class="active">
+    <div class="picker-intro">Ch. 4 Deep Dive — 2 full sets.</div>
+    <p class="picker-sub">Boland Ch. 4 (Substance Use and Addictive Disorders) is the heaviest-weighted chapter on your instructor's Exam 3 study guide &mdash; 7 topics: opioid withdrawal, buprenorphine, alcohol withdrawal, naloxone vs. naltrexone, overdose symptoms, Wernicke's vs. Korsakoff's, and full vs. partial opioid agonists. Each set below covers all 7 in depth with fresh vignettes.</p>
+    <div class="exam-list" id="examList"></div>
+  </section>
+
+  <section id="quiz">
+    <div class="quiz-topbar">
+      <button class="back-link" id="toPicker" type="button">&larr; All exams</button>
+      <span class="qcount" id="qcount"></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="stem" id="stem"></div>
+    <div class="options" id="options"></div>
+    <div class="submit-row"><button class="btn btn-primary" id="submitBtn" type="button" disabled>Submit answer</button></div>
+    <div id="rationaleBox"></div>
+  </section>
+
+  <section id="results">
+    <div class="results-hero">
+      <div class="score-big" id="scoreBig"></div>
+      <div class="score-pct" id="scorePct"></div>
+      <div class="score-label" id="scoreLabel"></div>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+    <div class="results-actions">
+      <button class="btn btn-primary" id="retakeBtn" type="button">Retake this exam</button>
+      <button class="btn btn-ghost" id="otherExamBtn" type="button">Try another exam</button>
+    </div>
+  </section>
+</div>
+
+<div class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <button class="nav-btn" id="backBtn" type="button">Back</button>
+    <div class="nav-score" id="navScore"></div>
+    <button class="nav-btn primary" id="nextBtn" type="button">Next</button>
+  </div>
+</div>
+
+<script>
+/* ===== DATA ===== */
+const EXAM_DATA = {
+  1: [{"id": "c4s1q1", "prompt": "A 29-year-old man dependent on prescription oxycodone runs out of pills and, 14 hours later, presents with diffuse muscle aching, abdominal cramping, and restlessness. On exam his pupils are notably dilated and he has visible piloerection. Which of the following best explains why his pupils are dilated rather than constricted?", "options": [{"id": "a", "text": "He is currently intoxicated on a higher dose than usual"}, {"id": "b", "text": "Withdrawal produces the physiologic opposite of intoxication, including pupillary dilation instead of the pinpoint pupils seen in overdose"}, {"id": "c", "text": "Dilated pupils indicate this is actually stimulant withdrawal, not opioid withdrawal"}, {"id": "d", "text": "This finding is unrelated to his opioid use"}], "correct_option_id": "b", "explanation": "Opioid withdrawal is essentially the mirror image of intoxication/overdose \u2014 pupils dilate instead of constrict, alongside piloerection, GI cramping, and autonomic hyperactivity."}, {"id": "c4s1q2", "prompt": "A patient dependent on short-acting heroin is compared to a patient dependent on long-acting methadone, both of whom stop use abruptly. Which statement correctly compares their expected withdrawal courses?", "options": [{"id": "a", "text": "Both will have identical onset and duration of withdrawal"}, {"id": "b", "text": "The heroin-dependent patient will have a faster, more intense withdrawal; the methadone-dependent patient's withdrawal will be delayed in onset, milder, but more prolonged"}, {"id": "c", "text": "The methadone-dependent patient will have no withdrawal symptoms at all"}, {"id": "d", "text": "The heroin-dependent patient's withdrawal will be delayed by several days"}, {"id": "e", "text": "Withdrawal severity has no relationship to a drug's duration of action"}], "correct_option_id": "b", "explanation": "Shorter-acting opioids like heroin produce faster-onset, more intense withdrawal; longer-acting opioids like methadone produce delayed-onset, milder, but more prolonged withdrawal."}, {"id": "c4s1q3", "prompt": "A pregnant woman with opioid use disorder asks why her prescriber recommends medication-assisted treatment rather than abrupt discontinuation during pregnancy. Which of the following is most relevant to this discussion?", "options": [{"id": "a", "text": "Opioid withdrawal itself poses no risk to a pregnancy and abrupt cessation is preferred"}, {"id": "b", "text": "Untreated withdrawal is uncomfortable for the mother and can be physiologically stressful to the pregnancy, so maintenance therapy is generally preferred over abrupt discontinuation"}, {"id": "c", "text": "Pregnancy eliminates the need for any opioid-related treatment"}, {"id": "d", "text": "Withdrawal in pregnancy always requires general anesthesia"}], "correct_option_id": "b", "explanation": "Because opioid withdrawal is physiologically stressful even though it is not typically directly lethal to the mother, maintenance therapy (e.g., buprenorphine or methadone) rather than abrupt discontinuation is generally recommended in pregnancy to maintain stability."}, {"id": "c4s1q4", "prompt": "A prescriber explains that buprenorphine will be started once the patient is already experiencing mild-to-moderate withdrawal symptoms, rather than immediately after her last opioid use. What is the primary reason for this timing?", "options": [{"id": "a", "text": "Buprenorphine only works if taken on an empty stomach"}, {"id": "b", "text": "Starting too early risks precipitating a more severe withdrawal state, since buprenorphine's high receptor affinity displaces the full agonist but only partially activates the receptor"}, {"id": "c", "text": "There is no clinical reason for this timing; it is simply convention"}, {"id": "d", "text": "Buprenorphine causes intoxication if started too early"}], "correct_option_id": "b", "explanation": "Buprenorphine's high affinity displaces full agonists from the receptor, but because it only partially activates the receptor, starting too early (before the patient is already in withdrawal) can precipitate a sudden, more severe withdrawal state."}, {"id": "c4s1q5", "prompt": "Which of the following is the primary pharmacologic reason buprenorphine is considered safer than methadone in overdose?", "options": [{"id": "a", "text": "Buprenorphine is not an opioid"}, {"id": "b", "text": "Buprenorphine's partial agonist activity produces a ceiling effect, so respiratory depression does not continue increasing with higher doses the way it does with a full agonist"}, {"id": "c", "text": "Buprenorphine is cleared from the body within minutes"}, {"id": "d", "text": "Methadone has no effect on respiratory drive"}], "correct_option_id": "b", "explanation": "As a partial agonist, buprenorphine's effects \u2014 including respiratory depression \u2014 plateau at a ceiling dose, unlike full agonists like methadone which have no such ceiling, making overdose comparatively safer."}, {"id": "c4s1q6", "prompt": "A patient combined with buprenorphine/naloxone (Suboxone) asks why the product contains naloxone, an opioid blocker, if it's designed to help her stay on opioid-based treatment. What is the correct explanation?", "options": [{"id": "a", "text": "The naloxone is what actually treats her opioid use disorder"}, {"id": "b", "text": "Naloxone has poor bioavailability when taken sublingually as directed, but becomes active and precipitates withdrawal if the product is dissolved and injected \u2014 deterring misuse"}, {"id": "c", "text": "Naloxone increases the euphoric effects of buprenorphine"}, {"id": "d", "text": "The naloxone has no purpose and is simply a filler ingredient"}], "correct_option_id": "b", "explanation": "Naloxone's poor sublingual bioavailability makes it inactive when the combination product is taken as directed, but it becomes active and triggers withdrawal if misused via injection \u2014 a built-in deterrent."}, {"id": "c4s1q7", "prompt": "A patient in alcohol withdrawal is 7 hours out from her last drink and reports mild anxiety with visible hand tremor, but no perceptual disturbances. According to the typical progression of alcohol withdrawal, which stage is this?", "options": [{"id": "a", "text": "Mild \u2014 tremulousness stage"}, {"id": "b", "text": "Moderate \u2014 perceptual disturbance stage"}, {"id": "c", "text": "Severe \u2014 seizure stage"}, {"id": "d", "text": "Delirium tremens"}], "correct_option_id": "a", "explanation": "Tremor and mild anxiety without perceptual disturbances at around 6-8 hours represents the mild, tremulousness stage \u2014 the earliest phase of alcohol withdrawal."}, {"id": "c4s1q8", "prompt": "Which patient profile carries the highest risk of progressing to delirium tremens during alcohol withdrawal?", "options": [{"id": "a", "text": "A patient with no prior withdrawal history and good baseline physical health"}, {"id": "b", "text": "A patient with 10 years of heavy binge-pattern drinking and a concurrent episode of pancreatitis"}, {"id": "c", "text": "A patient who drinks only socially on weekends"}, {"id": "d", "text": "A patient with a single isolated binge-drinking episode"}], "correct_option_id": "b", "explanation": "Years of heavy binge-pattern drinking combined with concurrent physical illness (like pancreatitis) are established risk factors for progression to delirium tremens; patients in good baseline health rarely progress to DTs."}, {"id": "c4s1q9", "prompt": "A patient in alcohol withdrawal develops confusion, disorientation, tactile hallucinations, and a heart rate of 130 on hospital day 3. Which of the following best describes the clinical significance of this presentation?", "options": [{"id": "a", "text": "This is a normal, expected part of withdrawal requiring no escalation of care"}, {"id": "b", "text": "This represents delirium tremens, the most severe stage of withdrawal, carrying meaningful untreated mortality risk and requiring urgent treatment"}, {"id": "c", "text": "This indicates the withdrawal process is nearly complete"}, {"id": "d", "text": "This is unrelated to alcohol withdrawal and suggests a new psychiatric diagnosis"}], "correct_option_id": "b", "explanation": "Confusion, tactile hallucinations, and marked autonomic hyperactivity together define delirium tremens, the most severe and potentially fatal stage of alcohol withdrawal if untreated."}, {"id": "c4s1q10", "prompt": "An overdose patient is given naloxone in the field and regains consciousness with improved respirations. Thirty minutes later, EMS notes she is again becoming lethargic with slowing respirations, despite no further drug use. What is the most likely explanation?", "options": [{"id": "a", "text": "Naloxone has a permanent effect and this cannot be explained pharmacologically"}, {"id": "b", "text": "Naloxone's duration of action is shorter than that of many opioids, so repeat dosing or monitoring is needed to prevent recurrence of toxicity"}, {"id": "c", "text": "This indicates naltrexone should be given instead"}, {"id": "d", "text": "This indicates she is now experiencing opioid withdrawal, not renewed toxicity"}], "correct_option_id": "b", "explanation": "Naloxone is short-acting relative to many opioids (especially longer-acting ones), so its effects can wear off before the opioid has been fully cleared, causing a recurrence of respiratory depression if not monitored or redosed."}, {"id": "c4s1q11", "prompt": "A patient asks whether naltrexone could be started today, the same day she used heroin, to help her stop using. What is the most appropriate response?", "options": [{"id": "a", "text": "Yes, naltrexone should be started immediately regardless of recent use"}, {"id": "b", "text": "No \u2014 naltrexone should only be started after she has completed opioid detoxification, since starting too early can precipitate severe withdrawal"}, {"id": "c", "text": "Naltrexone has no interaction with opioids and timing does not matter"}, {"id": "d", "text": "Naltrexone is used only for alcohol use disorder, never for opioids"}], "correct_option_id": "b", "explanation": "Naltrexone is an opioid antagonist; starting it before a patient has completed detoxification can precipitate severe withdrawal, so it should only be initiated once the patient is confirmed opioid-free."}, {"id": "c4s1q12", "prompt": "A patient is found unresponsive with pinpoint pupils and a respiratory rate of 4/min. Paramedics also note track marks on both arms. Which class of intoxication is most consistent with this presentation?", "options": [{"id": "a", "text": "Stimulant intoxication"}, {"id": "b", "text": "Opioid intoxication/overdose"}, {"id": "c", "text": "Sedative-hypnotic intoxication"}, {"id": "d", "text": "Hallucinogen intoxication"}], "correct_option_id": "b", "explanation": "Pinpoint pupils combined with severe respiratory depression is the classic opioid overdose triad, supported here by track marks suggesting IV drug use."}, {"id": "c4s1q13", "prompt": "A patient presents with dilated pupils, severe agitation, chest pain, and a heart rate of 150. Which of the following represents the most life-threatening potential complication to monitor for?", "options": [{"id": "a", "text": "Mild sedation"}, {"id": "b", "text": "Cardiac arrhythmia or myocardial infarction from stimulant toxicity"}, {"id": "c", "text": "Slow, shallow breathing"}, {"id": "d", "text": "Pinpoint pupils progressing to coma"}], "correct_option_id": "b", "explanation": "Stimulant toxicity carries a real risk of life-threatening cardiac complications, including arrhythmia and myocardial infarction, distinct from the respiratory depression seen with opioid or sedative overdose."}, {"id": "c4s1q14", "prompt": "A patient who took an unknown quantity of a benzodiazepine along with several alcoholic drinks is found extremely sedated with slow, shallow breathing. What best explains the severity of this presentation?", "options": [{"id": "a", "text": "Benzodiazepines and alcohol have no pharmacologic interaction"}, {"id": "b", "text": "Both substances produce additive CNS and respiratory depression through related GABAergic mechanisms, significantly increasing danger when combined"}, {"id": "c", "text": "This presentation is more consistent with stimulant toxicity"}, {"id": "d", "text": "Alcohol reverses the sedative effects of benzodiazepines"}], "correct_option_id": "b", "explanation": "Benzodiazepines and alcohol both potentiate GABA activity, producing additive CNS/respiratory depression that is significantly more dangerous in combination than either substance alone."}, {"id": "c4s1q15", "prompt": "A patient with a history of heavy alcohol use and poor nutritional intake presents with ataxia, a lateral gaze abnormality, and global confusion. Which vitamin should be administered before or alongside any glucose-containing fluids?", "options": [{"id": "a", "text": "Vitamin B12"}, {"id": "b", "text": "Thiamine"}, {"id": "c", "text": "Folate"}, {"id": "d", "text": "Vitamin D"}], "correct_option_id": "b", "explanation": "This presentation is the classic Wernicke encephalopathy triad; thiamine must be given before or with glucose to avoid precipitating or worsening the encephalopathy in a thiamine-deficient patient."}, {"id": "c4s1q16", "prompt": "A patient recovering from Wernicke encephalopathy several weeks ago now presents as alert and conversational but unable to retain any new information, frequently offering detailed but inaccurate accounts of recent events. What proportion of patients with this presentation (Korsakoff syndrome) achieve full recovery?", "options": [{"id": "a", "text": "Nearly all patients recover fully"}, {"id": "b", "text": "Only about 20% recover fully; most have persistent memory impairment"}, {"id": "c", "text": "About 90% recover fully within a week"}, {"id": "d", "text": "Recovery is unrelated to how promptly Wernicke encephalopathy was treated"}], "correct_option_id": "b", "explanation": "Only about 20% of patients with Korsakoff syndrome achieve full recovery; the majority have lasting memory impairment, which is why prompt treatment of Wernicke encephalopathy is critical."}, {"id": "c4s1q17", "prompt": "A prescriber is explaining the difference between methadone and buprenorphine to a nursing student. Which statement correctly captures the core pharmacologic distinction?", "options": [{"id": "a", "text": "Methadone is a partial agonist; buprenorphine is a full agonist"}, {"id": "b", "text": "Methadone is a full mu-opioid agonist with no ceiling effect; buprenorphine is a partial agonist with a ceiling effect on its maximal activity"}, {"id": "c", "text": "Both drugs are opioid antagonists"}, {"id": "d", "text": "Methadone cannot be used to treat opioid use disorder"}], "correct_option_id": "b", "explanation": "Methadone is a full agonist with no ceiling on its effects (including respiratory depression); buprenorphine is a partial agonist whose effects plateau at a ceiling dose."}, {"id": "c4s1q18", "prompt": "Which of the following statements accurately reflects a key clinical difference between full and partial opioid agonists in terms of regulatory requirements?", "options": [{"id": "a", "text": "Both require identical regulatory oversight and dispensing settings"}, {"id": "b", "text": "Methadone (full agonist) typically requires dispensing through a certified opioid treatment program, while buprenorphine (partial agonist) can often be prescribed in office-based outpatient settings"}, {"id": "c", "text": "Buprenorphine requires more restrictive regulatory oversight than methadone"}, {"id": "d", "text": "Neither medication requires any special regulatory considerations"}], "correct_option_id": "b", "explanation": "Methadone's full-agonist profile and higher overdose risk generally require dispensing through a certified opioid treatment program, while buprenorphine's safer ceiling-effect profile allows for office-based outpatient prescribing by appropriately trained providers."}],
+  2: [{"id": "c4s2q1", "prompt": "A patient incarcerated three days ago and previously dependent on fentanyl now reports intense muscle and bone aching, profuse rhinorrhea, and abdominal cramping. Correctional medical staff note his pupils are markedly dilated and he appears restless but is fully oriented. What is this presentation most consistent with?", "options": [{"id": "a", "text": "Opioid overdose"}, {"id": "b", "text": "Opioid withdrawal"}, {"id": "c", "text": "Alcohol withdrawal"}, {"id": "d", "text": "Stimulant intoxication"}], "correct_option_id": "b", "explanation": "Dilated pupils, aching, rhinorrhea, and cramping with full orientation is the classic opioid withdrawal picture \u2014 the physiologic opposite of overdose, which would show constricted pupils and depressed consciousness."}, {"id": "c4s2q2", "prompt": "A nurse practitioner explains to a patient that even though opioid withdrawal feels like the worst flu of her life, it is generally not considered life-threatening the way alcohol or benzodiazepine withdrawal can be. What is the most accurate basis for this statement?", "options": [{"id": "a", "text": "Opioid withdrawal has no physical symptoms at all"}, {"id": "b", "text": "Unlike alcohol/sedative-hypnotic withdrawal, opioid withdrawal does not carry a significant risk of withdrawal seizures or delirium tremens in most patients"}, {"id": "c", "text": "Opioid withdrawal is actually more dangerous than alcohol withdrawal"}, {"id": "d", "text": "This statement is inaccurate and should not be told to patients"}], "correct_option_id": "b", "explanation": "While extremely uncomfortable, opioid withdrawal generally does not carry the seizure and delirium tremens risk associated with alcohol and sedative-hypnotic withdrawal, making it far less likely to be directly life-threatening."}, {"id": "c4s2q3", "prompt": "A patient using both heroin and alprazolam abruptly stops both substances simultaneously. Which withdrawal syndrome should be of greater immediate medical concern, and why?", "options": [{"id": "a", "text": "The opioid withdrawal, because it can cause seizures"}, {"id": "b", "text": "The benzodiazepine withdrawal, because it carries a risk of withdrawal seizures similar to alcohol withdrawal, unlike opioid withdrawal"}, {"id": "c", "text": "Neither carries any medical risk"}, {"id": "d", "text": "Both carry identical risk profiles"}], "correct_option_id": "b", "explanation": "Benzodiazepine withdrawal shares alcohol's GABAergic mechanism and seizure risk, making it the more medically dangerous of the two withdrawal syndromes in this scenario, unlike opioid withdrawal which is rarely seizure-associated."}, {"id": "c4s2q4", "prompt": "A patient on buprenorphine maintenance asks why she was told to wait until she felt noticeably ill before taking her first dose, rather than taking it right after her last opioid use. What is the underlying pharmacologic concept being applied?", "options": [{"id": "a", "text": "Buprenorphine tastes better when the patient is already nauseated"}, {"id": "b", "text": "Buprenorphine's high affinity for the mu receptor can displace a full agonist while only partially activating it, which can precipitate more severe withdrawal if started too soon"}, {"id": "c", "text": "There is no pharmacologic reason for this instruction"}, {"id": "d", "text": "Buprenorphine only works on an empty stomach"}], "correct_option_id": "b", "explanation": "This reflects buprenorphine's partial agonist pharmacology \u2014 its high receptor affinity displaces full agonists but provides only partial activation, risking precipitated withdrawal if induction begins before adequate withdrawal has set in."}, {"id": "c4s2q5", "prompt": "Compared to a full opioid agonist, why does buprenorphine carry a reduced risk of fatal respiratory depression even at higher doses?", "options": [{"id": "a", "text": "It does not cross the blood-brain barrier"}, {"id": "b", "text": "Its partial agonist activity at the mu receptor produces a ceiling effect on respiratory depression that does not continue increasing with dose"}, {"id": "c", "text": "It is rapidly metabolized before reaching the brain"}, {"id": "d", "text": "It binds only to peripheral opioid receptors"}], "correct_option_id": "b", "explanation": "Buprenorphine's partial agonist activity creates a ceiling effect, meaning respiratory depression plateaus rather than continuing to worsen with increasing doses, unlike full agonists."}, {"id": "c4s2q6", "prompt": "A patient asks why she cannot simply inject her buprenorphine/naloxone film to get a stronger effect. What would happen if she did?", "options": [{"id": "a", "text": "Nothing different would happen compared to taking it sublingually"}, {"id": "b", "text": "The naloxone component, which is inactive sublingually, would become active if injected and would likely precipitate withdrawal"}, {"id": "c", "text": "Injecting it would make the medication more effective for pain"}, {"id": "d", "text": "This route would eliminate any risk of withdrawal"}], "correct_option_id": "b", "explanation": "Naloxone's poor sublingual bioavailability makes it inactive when the product is taken as directed, but injecting it activates the antagonist component, likely precipitating withdrawal \u2014 a deliberate misuse deterrent."}, {"id": "c4s2q7", "prompt": "A patient in alcohol withdrawal is at hour 10 since her last drink and reports seeing shadows moving in her peripheral vision, though she remains oriented to person, place, and time. Which stage of withdrawal does this represent?", "options": [{"id": "a", "text": "Mild \u2014 tremulousness only"}, {"id": "b", "text": "Moderate \u2014 perceptual disturbance stage"}, {"id": "c", "text": "Severe \u2014 seizure stage"}, {"id": "d", "text": "Delirium tremens"}], "correct_option_id": "b", "explanation": "Perceptual disturbances while remaining fully oriented represents the moderate stage of alcohol withdrawal, occurring roughly 8-12 hours after the last drink."}, {"id": "c4s2q8", "prompt": "Which of the following patients is at LOWEST risk for progressing to delirium tremens during alcohol withdrawal?", "options": [{"id": "a", "text": "A patient with a prior history of withdrawal seizures"}, {"id": "b", "text": "A patient with 12 years of heavy binge drinking and current hepatitis"}, {"id": "c", "text": "A patient with good baseline health and no prior withdrawal complications, admitted after a single recent period of heavy drinking"}, {"id": "d", "text": "A patient with concurrent pancreatitis"}], "correct_option_id": "c", "explanation": "Patients in good baseline physical health without a prior history of complicated withdrawal rarely progress to delirium tremens, unlike those with chronic heavy use and concurrent illness."}, {"id": "c4s2q9", "prompt": "A patient admitted for an unrelated medical issue develops new confusion, tactile hallucinations, and autonomic instability on hospital day 3, with a history of heavy daily alcohol use prior to admission. What is the most urgent concern?", "options": [{"id": "a", "text": "A routine psychiatric consultation can be scheduled for the following week"}, {"id": "b", "text": "This represents delirium tremens, a medical emergency requiring prompt treatment given its significant untreated mortality risk"}, {"id": "c", "text": "This is unrelated to his alcohol history"}, {"id": "d", "text": "No intervention is needed since symptoms will resolve spontaneously"}], "correct_option_id": "b", "explanation": "New confusion, tactile hallucinations, and autonomic instability emerging around day 3 in a patient with a heavy alcohol history is the classic delirium tremens presentation, requiring urgent treatment."}, {"id": "c4s2q10", "prompt": "A patient is revived with naloxone after an opioid overdose involving a long-acting opioid. What is an important consideration regarding her ongoing monitoring?", "options": [{"id": "a", "text": "No further monitoring is needed once she is awake"}, {"id": "b", "text": "Because naloxone's duration of action may be shorter than that of the opioid involved, she should be monitored for recurrence of respiratory depression as naloxone wears off"}, {"id": "c", "text": "She should be discharged immediately"}, {"id": "d", "text": "Naloxone permanently prevents any further opioid effect"}], "correct_option_id": "b", "explanation": "Naloxone's relatively short duration of action, especially compared to longer-acting opioids, means respiratory depression can recur as it wears off, requiring ongoing monitoring or repeat dosing."}, {"id": "c4s2q11", "prompt": "A patient who used opioids as recently as yesterday wants to start naltrexone today for relapse prevention. What is the appropriate guidance?", "options": [{"id": "a", "text": "Naltrexone can be started immediately with no risk"}, {"id": "b", "text": "Naltrexone should be delayed until she has completed detoxification and is confirmed opioid-free, to avoid precipitating severe withdrawal"}, {"id": "c", "text": "Naltrexone is not used for opioid use disorder"}, {"id": "d", "text": "Naltrexone should be combined with continued opioid use"}], "correct_option_id": "b", "explanation": "As with buprenorphine induction, naltrexone (a full antagonist) should only be started after confirmed abstinence/detoxification to avoid precipitating severe withdrawal."}, {"id": "c4s2q12", "prompt": "Paramedics find a patient unconscious with a respiratory rate of 3/min, cyanosis, and constricted pupils near a used syringe. What is the priority intervention?", "options": [{"id": "a", "text": "Administer naltrexone"}, {"id": "b", "text": "Administer naloxone"}, {"id": "c", "text": "Administer flumazenil"}, {"id": "d", "text": "Wait for spontaneous recovery"}], "correct_option_id": "b", "explanation": "This overdose triad (respiratory depression, cyanosis, pinpoint pupils) calls for immediate naloxone administration \u2014 the fast-acting agent appropriate for emergency reversal."}, {"id": "c4s2q13", "prompt": "A patient with dilated pupils, profuse sweating, extreme agitation, and a temperature of 105\u00b0F is brought to the ED after reportedly using methamphetamine. Which complication represents the greatest immediate danger?", "options": [{"id": "a", "text": "Mild dehydration"}, {"id": "b", "text": "Life-threatening hyperthermia and potential cardiac arrhythmia"}, {"id": "c", "text": "Slow, shallow breathing"}, {"id": "d", "text": "Pinpoint pupils"}], "correct_option_id": "b", "explanation": "Severe hyperthermia and cardiac arrhythmia are the most immediately life-threatening complications of stimulant toxicity, distinct from the respiratory depression seen with opioid overdose."}, {"id": "c4s2q14", "prompt": "An older adult who takes a prescribed benzodiazepine nightly has two glasses of wine at a family dinner and later is found very difficult to arouse with slow breathing. What best explains this severity?", "options": [{"id": "a", "text": "The wine had no effect on her benzodiazepine"}, {"id": "b", "text": "Alcohol and benzodiazepines produce additive CNS/respiratory depression through related GABAergic pathways"}, {"id": "c", "text": "This is unrelated to either substance"}, {"id": "d", "text": "This represents opioid toxicity"}], "correct_option_id": "b", "explanation": "Combining a benzodiazepine with alcohol produces dangerous additive CNS and respiratory depression, given both substances act through related GABAergic mechanisms."}, {"id": "c4s2q15", "prompt": "A patient with chronic alcohol use and poor nutrition is treated in the ED with IV dextrose for hypoglycemia before thiamine is given. Shortly after, she develops worsening confusion and ataxia. What is the most likely explanation?", "options": [{"id": "a", "text": "The dextrose had no effect on her presentation"}, {"id": "b", "text": "Giving glucose before thiamine in a thiamine-deficient patient can precipitate or worsen Wernicke encephalopathy"}, {"id": "c", "text": "This indicates a new stroke unrelated to her alcohol use"}, {"id": "d", "text": "This is an expected, harmless response to dextrose"}], "correct_option_id": "b", "explanation": "In a thiamine-deficient patient, administering glucose before thiamine can precipitate or worsen Wernicke encephalopathy \u2014 thiamine should be given first or concurrently."}, {"id": "c4s2q16", "prompt": "A patient with confirmed Korsakoff syndrome is alert, socially engaged, and answers questions fluently, but frequently provides detailed, plausible-sounding but inaccurate accounts of recent events. What is this phenomenon called, and what does it reflect?", "options": [{"id": "a", "text": "Malingering; the patient is intentionally lying"}, {"id": "b", "text": "Confabulation; the patient unconsciously fills genuine memory gaps with fabricated but plausible details"}, {"id": "c", "text": "Psychosis; the patient is experiencing delusions"}, {"id": "d", "text": "Normal aging; no pathology is present"}], "correct_option_id": "b", "explanation": "Confabulation \u2014 unconsciously filling memory gaps with fabricated but plausible details \u2014 is a classic feature of Korsakoff syndrome, distinct from intentional deception."}, {"id": "c4s2q17", "prompt": "A patient is being counseled on the difference between methadone and buprenorphine for opioid use disorder treatment. Which statement correctly reflects their comparative overdose risk?", "options": [{"id": "a", "text": "They carry identical overdose risk since both are opioids"}, {"id": "b", "text": "Methadone, as a full agonist with no ceiling effect, carries a higher overdose risk than buprenorphine, which has a ceiling effect as a partial agonist"}, {"id": "c", "text": "Buprenorphine carries a higher overdose risk than methadone"}, {"id": "d", "text": "Neither medication carries any overdose risk"}], "correct_option_id": "b", "explanation": "Methadone's full-agonist, no-ceiling pharmacology gives it a comparatively higher overdose risk than buprenorphine's partial-agonist, ceiling-effect profile."}, {"id": "c4s2q18", "prompt": "A patient asks why her friend, who is on methadone maintenance, has to visit a specialized clinic daily, while she herself picks up her buprenorphine prescription monthly from a regular pharmacy. What best explains this difference?", "options": [{"id": "a", "text": "This is simply random variation with no underlying reason"}, {"id": "b", "text": "Methadone's full-agonist profile and higher overdose risk generally require dispensing through a certified opioid treatment program, while buprenorphine's safer profile allows office-based prescribing"}, {"id": "c", "text": "Buprenorphine is illegal to dispense from regular pharmacies"}, {"id": "d", "text": "Methadone has no regulatory restrictions"}], "correct_option_id": "b", "explanation": "Methadone's full-agonist pharmacology and associated overdose risk require the more controlled dispensing environment of a certified opioid treatment program, unlike buprenorphine, which can be prescribed in standard office-based settings."}]
+};
+
+/* ===== ENGINE ===== */
+const EXAM_META = {
+  1: { title: 'Ch. 4 Deep Dive — Set 1', sub: '18 questions · all 7 Ch. 4 topics' },
+  2: { title: 'Ch. 4 Deep Dive — Set 2', sub: '18 questions · all 7 Ch. 4 topics' },
+};
+
+let state = {
+  examId: null,
+  qIndex: 0,
+  answers: {}, // qid -> { selected, submitted, correct }
+};
+
+const el = (id) => document.getElementById(id);
+const screens = { picker: el('picker'), quiz: el('quiz'), results: el('results') };
+
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+  el('navbar').classList.toggle('active', name === 'quiz');
+  window.scrollTo(0, 0);
+}
+
+function loadProgress(examId) {
+  try {
+    const raw = localStorage.getItem('nurs5340_ch4deep_progress_' + examId);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+function saveProgress(examId, answers) {
+  try { localStorage.setItem('nurs5340_ch4deep_progress_' + examId, JSON.stringify(answers)); } catch (e) {}
+}
+function examCompletion(examId) {
+  const answers = loadProgress(examId);
+  const total = EXAM_DATA[examId].length;
+  const answered = Object.values(answers).filter(a => a.submitted).length;
+  const correct = Object.values(answers).filter(a => a.correct).length;
+  return { total, answered, correct };
+}
+
+function renderPicker() {
+  const list = el('examList');
+  list.innerHTML = '';
+  [1, 2].forEach(id => {
+    const { total, answered, correct } = examCompletion(id);
+    const card = document.createElement('button');
+    card.className = 'exam-card';
+    card.type = 'button';
+    let badge;
+    if (answered === 0) {
+      badge = `<span class="badge">Not started</span>`;
+    } else if (answered < total) {
+      badge = `<span class="badge">${answered}/${total} answered</span>`;
+    } else {
+      badge = `<span class="badge done">${correct}/${total} correct</span>`;
+    }
+    card.innerHTML = `
+      <div>
+        <div class="et">${EXAM_META[id].title}</div>
+        <div class="es">${EXAM_META[id].sub}</div>
+      </div>
+      ${badge}
+    `;
+    card.addEventListener('click', () => startExam(id));
+    list.appendChild(card);
+  });
+}
+
+function startExam(examId) {
+  state.examId = examId;
+  state.answers = loadProgress(examId);
+  const questions = EXAM_DATA[examId];
+  let firstUnanswered = questions.findIndex(q => !(state.answers[q.id] && state.answers[q.id].submitted));
+  state.qIndex = firstUnanswered === -1 ? 0 : firstUnanswered;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function currentQuestions() { return EXAM_DATA[state.examId]; }
+function currentQuestion() { return currentQuestions()[state.qIndex]; }
+
+function renderQuestion() {
+  const questions = currentQuestions();
+  const q = currentQuestion();
+  const total = questions.length;
+  el('qcount').textContent = `Question ${state.qIndex + 1} of ${total}`;
+  el('progressFill').style.width = ((state.qIndex) / total * 100) + '%';
+  el('stem').textContent = q.prompt;
+
+  const existing = state.answers[q.id];
+  const optionsDiv = el('options');
+  optionsDiv.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.type = 'button';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt.text}</span>`;
+    if (existing && existing.submitted) {
+      btn.classList.add('locked');
+      if (opt.id === q.correct_option_id) btn.classList.add('correct');
+      if (existing.selected === opt.id && opt.id !== q.correct_option_id) btn.classList.add('incorrect');
+    } else if (existing && existing.selected === opt.id) {
+      btn.classList.add('selected');
+    }
+    btn.addEventListener('click', () => selectOption(opt.id));
+    optionsDiv.appendChild(btn);
+  });
+
+  const submitBtn = el('submitBtn');
+  const rationaleBox = el('rationaleBox');
+  if (existing && existing.submitted) {
+    submitBtn.style.display = 'none';
+    renderRationale(q, existing);
+  } else {
+    submitBtn.style.display = 'inline-block';
+    submitBtn.disabled = !(existing && existing.selected);
+    rationaleBox.innerHTML = '';
+  }
+
+  updateNavbar();
+}
+
+function selectOption(optId) {
+  const q = currentQuestion();
+  const existing = state.answers[q.id];
+  if (existing && existing.submitted) return; // locked after submit
+  state.answers[q.id] = { selected: optId, submitted: false };
+  renderQuestion();
+}
+
+function submitAnswer() {
+  const q = currentQuestion();
+  const current = state.answers[q.id];
+  if (!current || !current.selected) return;
+  const correct = current.selected === q.correct_option_id;
+  state.answers[q.id] = { selected: current.selected, submitted: true, correct };
+  saveProgress(state.examId, state.answers);
+  renderQuestion();
+}
+
+function renderRationale(q, ans) {
+  const verdictClass = ans.correct ? 'right' : 'wrong';
+  const verdictText = ans.correct ? 'Correct.' : 'Not quite.';
+  el('rationaleBox').innerHTML = `
+    <div class="rationale">
+      <span class="verdict ${verdictClass}">${verdictText}</span>
+      ${q.explanation}
+    </div>
+  `;
+}
+
+function updateNavbar() {
+  const questions = currentQuestions();
+  const total = questions.length;
+  el('backBtn').disabled = state.qIndex === 0;
+  const isLast = state.qIndex === total - 1;
+  el('nextBtn').textContent = isLast ? 'Finish exam' : 'Next';
+  const answeredCount = Object.values(state.answers).filter(a => a.submitted).length;
+  el('navScore').textContent = `${answeredCount} of ${total} answered`;
+}
+
+el('backBtn').addEventListener('click', () => {
+  if (state.qIndex > 0) { state.qIndex--; renderQuestion(); }
+});
+el('nextBtn').addEventListener('click', () => {
+  const questions = currentQuestions();
+  if (state.qIndex < questions.length - 1) {
+    state.qIndex++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+});
+el('submitBtn').addEventListener('click', submitAnswer);
+el('toPicker').addEventListener('click', () => { renderPicker(); showScreen('picker'); });
+
+function showResults() {
+  const questions = currentQuestions();
+  const total = questions.length;
+  let correct = 0;
+  questions.forEach(q => { if (state.answers[q.id] && state.answers[q.id].correct) correct++; });
+  const pct = Math.round((correct / total) * 100);
+
+  el('scoreBig').textContent = `${correct} / ${total}`;
+  el('scorePct').textContent = `${pct}% correct`;
+  let label = 'Keep reviewing the missed topics below.';
+  if (pct >= 90) label = 'Strong command of this material.';
+  else if (pct >= 80) label = 'Solid — tighten up the missed items below.';
+  else if (pct >= 70) label = 'Getting there — review the misses closely.';
+  el('scoreLabel').textContent = label;
+
+  const reviewList = el('reviewList');
+  reviewList.innerHTML = '';
+  questions.forEach((q, i) => {
+    const ans = state.answers[q.id];
+    const row = document.createElement('button');
+    row.className = 'review-row';
+    row.type = 'button';
+    const answered = ans && ans.submitted;
+    const right = answered && ans.correct;
+    const mark = answered ? (right ? '<span class="mark right">&#10003;</span>' : '<span class="mark wrong">&#10005;</span>') : '<span class="mark" style="background:#999">&ndash;</span>';
+    row.innerHTML = `${mark}<span class="rq">${i + 1}. ${q.prompt}</span>`;
+    row.addEventListener('click', () => {
+      state.qIndex = i;
+      showScreen('quiz');
+      renderQuestion();
+    });
+    reviewList.appendChild(row);
+  });
+
+  showScreen('results');
+}
+
+el('retakeBtn').addEventListener('click', () => {
+  state.answers = {};
+  saveProgress(state.examId, {});
+  state.qIndex = 0;
+  showScreen('quiz');
+  renderQuestion();
+});
+el('otherExamBtn').addEventListener('click', () => { renderPicker(); showScreen('picker'); });
+
+/* Theme toggle */
+function initTheme() {
+  let saved = null;
+  try { saved = localStorage.getItem('nurs5340_ch4deep_theme'); } catch (e) {}
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  updateThemeLabel();
+}
+function updateThemeLabel() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const effectiveDark = current === 'dark' || (!current && prefersDark);
+  el('themeToggle').textContent = effectiveDark ? 'Light mode' : 'Dark mode';
+}
+el('themeToggle').addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const effectiveDark = current === 'dark' || (!current && prefersDark);
+  const next = effectiveDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('nurs5340_ch4deep_theme', next); } catch (e) {}
+  updateThemeLabel();
+});
+
+initTheme();
+renderPicker();
+showScreen('picker');
+</script>
+</body>
+</html>
